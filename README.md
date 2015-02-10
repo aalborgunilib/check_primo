@@ -40,6 +40,96 @@ Primo Central (if you are a subscriber) can be checked with the following:
 
     plugins/check_primo --critical=6 --hostname=http://<server>.hosted.exlibrisgroup.com --port=1701 --institution=INST --primocentral
 
+## Usage
+
+    Usage: check_primo
+        [ -c|--critical=<critical threshold> ]
+        [ -w|--warning=<warning threshold> ]
+        [ -H|--hostname=<Primo server name> ]
+        [ -p|--port=<port number> ]
+        [ -I|--institution=<Primo institution> ]
+        [ -P|--primocentral ]
+        [ -L|--local ]
+        [ -K|--keywords=<keyword1+keyword2+...> ]
+        [ -t|--timeout=<timeout> ]
+
+The `-c|--critical` and `-w|--warning` defines the standard Nagios service check thresholds (in seconds). The warning threshold can be omitted.
+
+`-H|--hostname` is the url to the Primo server (including http:// or https://). `-p|--port` is the port number and defaults to port 1701.
+
+`-I|--institution` is the Primo institution to which the search is scoped to.
+
+`-L|--local` performs the search in the local index. `-P|--primocentral` performs the search in the Primo Central index. You can add both options to perform a blended search.
+
+`-K|--keywords` lets you add your own search string instead of using the provided list of random searches. Separate each keyword by a `+` sign.
+
+`-t|--timeout` is the plugin timeout. If timeout is reached the check will bail out and issue a UNKNOWN state.
+
+`-c|--critical`, `-H|--hostname`, and `-I|--institution` are required.
+
+### Icinga 2 configuration ###
+
+You can adapt the following example configuration to set up tests in the excellent [Icinga 2](https://www.icinga.org/icinga/icinga-2/):
+
+    object Host "primo" {
+      import "generic-host"
+      
+      vars.primo_search["Primo Central index"] = {
+        primo_warn_time = 6
+        primo_critical_time = 10
+        primo_local = false
+        primo_primocentral = true
+        primo_hostname = "http://<server>.hosted.exlibrisgroup.com"
+        primo_institution = "INST"
+      }
+      vars.primo_search["Primo local index"] = {
+        primo_warn_time = 2
+        primo_critical_time = 4
+        primo_local = true
+        primo_primocentral = false
+        primo_hostname = "http://<server>.hosted.exlibrisgroup.com"
+        primo_institution = "INST"
+      }
+      vars.primo_search["Primo blended search"] = {
+        primo_warn_time = 6
+        primo_critical_time = 10
+        primo_local = true
+        primo_primocentral = true
+        primo_hostname = "http://<server>.hosted.exlibrisgroup.com"
+        primo_institution = "INST"
+      }
+    }
+    
+    apply Service for ( primo => config in host.vars.primo_search ) {
+      import "generic-service"
+      check_command = "primo"
+      vars += config
+      assign where host.vars.primo_search
+    }
+    
+    object CheckCommand "primo" {
+      import "plugin-check-command"
+      command = [
+        PluginDir + "/check_primo"
+      ]
+
+      arguments = {
+        "-c" = "$primo_critical_time$"
+        "-w" = "$primo_warn_time$"
+        "-t" = "$primo_timeout$"
+        "-H" = "$primo_hostname$"
+        "-p" = "$primo_port$"
+        "-I" = "$primo_institution$"
+        "-P" = {
+          set_if = "$primo_primocentral$"
+        }
+        "-L" = {
+          set_if = "$primo_local$"
+        }
+        "-K" = "$primo_keywords$"
+      }
+    }
+
 ## Bugs
 
 * Currently the plugin will issue an UNKNOWN state when it times out (defaults to 15 seconds). I think it would be more correct to issue a CRITICAL state or at least let it be up the user to decide.
