@@ -79,30 +79,26 @@ You can adapt the following example configuration to set up tests in the excelle
         primo_critical_time = 10
         primo_local = false
         primo_primocentral = true
-        primo_hostname = "http://<server>.hosted.exlibrisgroup.com"
-        primo_institution = "INST"
       }
       vars.primo_search["Primo local index"] = {
         primo_warn_time = 2
         primo_critical_time = 4
         primo_local = true
         primo_primocentral = false
-        primo_hostname = "http://<server>.hosted.exlibrisgroup.com"
-        primo_institution = "INST"
       }
       vars.primo_search["Primo blended search"] = {
         primo_warn_time = 6
         primo_critical_time = 10
         primo_local = true
         primo_primocentral = true
-        primo_hostname = "http://<server>.hosted.exlibrisgroup.com"
-        primo_institution = "INST"
       }
     }
     
     apply Service for ( primo => config in host.vars.primo_search ) {
       import "generic-service"
       check_command = "primo"
+      vars.primo_hostname = "http://<server>.hosted.exlibrisgroup.com"
+      vars.primo_institution = "INST"
       vars += config
       assign where host.vars.primo_search
     }
