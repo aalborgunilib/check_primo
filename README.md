@@ -1,5 +1,5 @@
 # check_primo
-Nagios (and compatibles) plugin to check and monitor the response time of searches performed in the ExLibris Primo library discovery system
+Nagios (and compatibles) plugin to check and monitor the response time of searches performed in the ExLibris Primo library discovery system.
 
 ## About
 Using the [brief search](https://developers.exlibrisgroup.com/primo/apis/webservices/xservices/search/briefsearch) API endpoint of ExLibris Primo this Nagios compatible plugin can be used as a check and monitoring tool for the search performance.
@@ -24,7 +24,7 @@ Install Perl dependencies for the plugin via e.g. [cpanm](https://metacpan.org/p
 
     cpanm --sudo --installdeps .
 
-*Compilation of the Perl dependencies does require the installation of software development tools on the server (gcc)*
+*Compilation of the Perl dependencies does require the installation of software development tools on the server (gcc).*
 
 Please check that you have set Primo up to recognize your server IP address in the WS and XS IP mapping table. Read the section "Register your IP" in [Getting started - XService API](https://developers.exlibrisgroup.com/primo/apis/webservices/gettingstarted).
 
