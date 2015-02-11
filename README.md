@@ -1,10 +1,10 @@
 # check_primo
-Nagios (and compatibles) plugin to check and monitor the response time of searches performed in the ExLibris Primo library discovery system.
+A plugin for Nagios (and other compatible monitoring services) to check and monitor the response time of searches performed in the ExLibris Primo library discovery system.
 
 ## About
 Using the [brief search](https://developers.exlibrisgroup.com/primo/apis/webservices/xservices/search/briefsearch) API endpoint of ExLibris Primo this Nagios compatible plugin can be used as a check and monitoring tool for the search performance.
 
-It can be configured to search for a specific query string or pick a random query from a predefined list of e.g. popular searches thus emulating a more real-life system behavior.
+It can be configured to search for a specific query string or pick a random query string from a predefined list of e.g. popular searches thus emulating a more real-life system behavior.
 
 In addition, it can perform the search in local collections only, Primo Central, or in both (blended search).
 
@@ -40,6 +40,8 @@ Primo Central (if you are a subscriber) can be checked with the following:
 
     plugins/check_primo --critical=6 --hostname=http://<server>.hosted.exlibrisgroup.com --port=1701 --institution=INST --primocentral
 
+The text file `primo_searches.txt` can be edited to suit you own institution. Please keep the file free of any empty lines and save it in UTF-8 encoding.
+
 ## Usage
 
     Usage: check_primo
@@ -63,17 +65,13 @@ The `-c|--critical` and `-w|--warning` defines the standard Nagios service check
 
 `-K|--keywords` lets you add your own search string instead of using the provided list of random searches. Separate each keyword by a `+` sign.
 
-`-t|--timeout` is the plugin timeout. If timeout is reached the check will bail out and issue a UNKNOWN state.
+`-t|--timeout` is the plugin timeout. If timeout is reached, the check will bail out and issue an UNKNOWN state.
 
 `-c|--critical`, `-H|--hostname`, and `-I|--institution` are required.
 
 ### Icinga 2 configuration ###
 
 An example configuration for `check_primo` has been provided for the excellent [Icinga 2](https://www.icinga.org/icinga/icinga-2/) in the file `config/primo-icinga2.conf`. You can use it as inpiration on how you can set up the different checks.
-
-## Bugs
-
-* Currently the plugin will issue an UNKNOWN state when it times out (defaults to 15 seconds). I think it would be more correct to issue a CRITICAL state or at least let it be up the user to decide.
 
 ## Todo
 
@@ -84,4 +82,3 @@ An example configuration for `check_primo` has been provided for the excellent [
 Copyright (c) 2015 Kasper Løvschall and Aalborg University Library
 
 This software is free software; you can redistribute it and/or modify it under the same terms as Perl itself. See [Perl Licensing](http://dev.perl.org/licenses/).
-
