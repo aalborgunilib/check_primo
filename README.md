@@ -69,62 +69,7 @@ The `-c|--critical` and `-w|--warning` defines the standard Nagios service check
 
 ### Icinga 2 configuration ###
 
-You can adapt the following example configuration to set up tests in the excellent [Icinga 2](https://www.icinga.org/icinga/icinga-2/):
-
-    object Host "primo" {
-      import "generic-host"
-      
-      vars.primo_search["Primo Central index"] = {
-        primo_warn_time = 6
-        primo_critical_time = 10
-        primo_local = false
-        primo_primocentral = true
-      }
-      vars.primo_search["Primo local index"] = {
-        primo_warn_time = 2
-        primo_critical_time = 4
-        primo_local = true
-        primo_primocentral = false
-      }
-      vars.primo_search["Primo blended search"] = {
-        primo_warn_time = 6
-        primo_critical_time = 10
-        primo_local = true
-        primo_primocentral = true
-      }
-    }
-    
-    apply Service for ( primo => config in host.vars.primo_search ) {
-      import "generic-service"
-      check_command = "primo"
-      vars.primo_hostname = "http://<server>.hosted.exlibrisgroup.com"
-      vars.primo_institution = "INST"
-      vars += config
-      assign where host.vars.primo_search
-    }
-    
-    object CheckCommand "primo" {
-      import "plugin-check-command"
-      command = [
-        PluginDir + "/check_primo"
-      ]
-
-      arguments = {
-        "-c" = "$primo_critical_time$"
-        "-w" = "$primo_warn_time$"
-        "-t" = "$primo_timeout$"
-        "-H" = "$primo_hostname$"
-        "-p" = "$primo_port$"
-        "-I" = "$primo_institution$"
-        "-P" = {
-          set_if = "$primo_primocentral$"
-        }
-        "-L" = {
-          set_if = "$primo_local$"
-        }
-        "-K" = "$primo_keywords$"
-      }
-    }
+An example configuration for `check_primo` has been provided for the excellent [Icinga 2](https://www.icinga.org/icinga/icinga-2/) in the file `config/primo-icinga2.conf`. You can use it as inpiration on how you can set up the different checks.
 
 ## Bugs
 

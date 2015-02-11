@@ -174,7 +174,7 @@ if ( -f dirname($0) . '/primo_searches.txt' || $p->opts->keywords ) {
 	alarm 0;
 
 	# Get the total # of hits
-	my $total_hits = $1 if ( $response =~ m{
+	my $total_hits = $1 if ( $response && $response =~ m{
 			TOTALHITS="(\d+?)"
 		}sxm );
 
