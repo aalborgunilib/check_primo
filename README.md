@@ -75,6 +75,10 @@ An example configuration for `check_primo` has been provided for the excellent [
 
 * Currently the plugin will issue an UNKNOWN state when it times out (defaults to 15 seconds). I think it would be more correct to issue a CRITICAL state or at least let it be up the user to decide.
 
+## Todo
+
+* Add check for Third Node Adaptors other than Primo Central
+
 ## Copyright and license
 
 Copyright (c) 2015 Kasper Løvschall and Aalborg University Library
