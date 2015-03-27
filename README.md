@@ -1,8 +1,8 @@
 # check_primo
-A plugin for Nagios (and other compatible monitoring services) to check and monitor the response time of searches performed in the ExLibris Primo library discovery system.
+A plugin for Nagios (and other compatible monitoring services) to check and monitor the response time of searches performed in the Ex Libris Primo library discovery system.
 
 ## About
-Using the [brief search](https://developers.exlibrisgroup.com/primo/apis/webservices/xservices/search/briefsearch) API endpoint of ExLibris Primo this Nagios compatible plugin can be used as a check and monitoring tool for the search performance.
+Using the [brief search](https://developers.exlibrisgroup.com/primo/apis/webservices/xservices/search/briefsearch) API endpoint of Ex Libris Primo this Nagios compatible plugin can be used as a check and monitoring tool for the search performance.
 
 It can be configured to search for a specific query string or pick a random query string from a predefined list of e.g. popular searches thus emulating a more real-life system behavior.
 
