@@ -17,6 +17,11 @@ use LWP::Simple;
 use File::RandomLine;
 use File::Basename;
 use Monitoring::Plugin;
+use Module::Load::Conditional;
+
+my $can_xml_pp = Module::Load::Conditional::can_load( modules => { 
+	'XML::LibXML' => undef,
+	'XML::LibXML::PrettyPrint' => undef } );
 
 use vars qw($VERSION $PROGNAME $verbose $warn $critical $timeout $result);
 
@@ -34,7 +39,8 @@ my $p = Monitoring::Plugin->new(
 	[ -P|--primocentral ]
 	[ -L|--local ]
 	[ -K|--keywords=<keyword1+keyword2+...> ]
-	[ -t|--timeout=<timeout> ]",
+	[ -t|--timeout=<timeout> ]
+	[ -v|--verbose ]",
 	plugin => $PROGNAME,
 	version => $VERSION,
 	timeout => 15,
@@ -162,6 +168,9 @@ if ( -f dirname($0) . '/primo_searches.txt' || $p->opts->keywords ) {
 	$adaptor .
 	'&query=any,contains,' . $search_string;
 
+	# Print debugging information 
+	print "Checking on: $url\n" if $p->opts->verbose;
+
 	# Enable and start counting down until timeout (this is the "mission critical" part)
 	alarm $p->opts->timeout;
 
@@ -172,6 +181,14 @@ if ( -f dirname($0) . '/primo_searches.txt' || $p->opts->keywords ) {
 		} );
 
 	alarm 0;
+
+	# Print debugging information 
+	if ( $can_xml_pp && $p->opts->verbose ) {
+		my $document = XML::LibXML->new->parse_string($response);
+		my $pp = XML::LibXML::PrettyPrint->new();
+		$pp->pretty_print($document);
+		print $document->toString;
+	}
 
 	# Get the total # of hits
 	my $total_hits = $1 if ( $response && $response =~ m{

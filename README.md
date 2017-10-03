@@ -54,6 +54,7 @@ The text file `primo_searches.txt` can be edited to suit you own institution. Pl
         [ -L|--local ]
         [ -K|--keywords=<keyword1+keyword2+...> ]
         [ -t|--timeout=<timeout> ]
+        [ -v|--verbose ]
 
 The `-c|--critical` and `-w|--warning` defines the standard Nagios service check thresholds (in seconds). The warning threshold can be omitted.
 
@@ -66,6 +67,8 @@ The `-c|--critical` and `-w|--warning` defines the standard Nagios service check
 `-K|--keywords` lets you add your own search string instead of using the provided list of random searches. Separate each keyword by a `+` sign.
 
 `-t|--timeout` is the plugin timeout. If timeout is reached, the check will bail out and issue an UNKNOWN state.
+
+`-v|--verbose` outputs debugging information. The full URL for the XService query and the formatted XML output of the response.
 
 `-c|--critical`, `-H|--hostname`, and `-I|--institution` are required.
 
